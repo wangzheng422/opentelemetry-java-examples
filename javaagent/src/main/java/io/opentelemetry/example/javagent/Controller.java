@@ -52,15 +52,35 @@ public class Controller {
 
       // URL url = new URL("http://172.21.6.8:13000");
       // String url = System.getenv("MY_URL");
+
+      makeHttpRequest(); 
+
+    } finally {
+      span.end();
+    }
+  }
+
+  /**
+   * Makes an HTTP request to the specified URL.
+   *
+   * @throws IOException if an I/O error occurs while making the request
+   */
+  private void makeHttpRequest() throws IOException {
+    Span span = tracer.spanBuilder("makeHttpRequest").startSpan();
+    try (Scope ignored = span.makeCurrent()) {
+      /**
+       * The URL object represents a Uniform Resource Locator, a pointer to a "resource" on the World Wide Web.
+       * It is used to establish a connection to the resource specified by the URL.
+       */
       URL url = new URL(System.getenv("WZH_URL"));
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("GET");
       int responseCode = connection.getResponseCode();
       LOGGER.info("HTTP GET response code: " + responseCode);
       connection.disconnect();
-
     } finally {
       span.end();
     }
   }
 }
+
