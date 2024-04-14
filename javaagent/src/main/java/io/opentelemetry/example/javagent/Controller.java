@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 @RestController
 public class Controller {
 
@@ -33,18 +37,28 @@ public class Controller {
   }
 
   @GetMapping("/ping")
-  public String ping() throws InterruptedException {
+  public String ping() throws InterruptedException, IOException {
     int sleepTime = random.nextInt(200);
     doWork(sleepTime);
     doWorkHistogram.record(sleepTime, Attributes.of(ATTR_METHOD, "ping"));
     return "pong";
   }
 
-  private void doWork(int sleepTime) throws InterruptedException {
+  private void doWork(int sleepTime) throws InterruptedException, IOException {
     Span span = tracer.spanBuilder("doWork").startSpan();
     try (Scope ignored = span.makeCurrent()) {
       Thread.sleep(sleepTime);
       LOGGER.info("A sample log message!");
+
+      // URL url = new URL("http://172.21.6.8:13000");
+      // String url = System.getenv("MY_URL");
+      URL url = new URL(System.getenv("WZH_URL"));
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      connection.setRequestMethod("GET");
+      int responseCode = connection.getResponseCode();
+      LOGGER.info("HTTP GET response code: " + responseCode);
+      connection.disconnect();
+
     } finally {
       span.end();
     }
