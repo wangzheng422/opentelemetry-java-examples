@@ -5,6 +5,7 @@ services:
     environment:
       OTEL_SERVICE_NAME: "graal-native-example-app"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4318"
+      WZH_URL: "https://cdn.staticfile.net/vue/3.3.4/vue.cjs.js"
     ports:
       - "8080:8080"
     depends_on:
