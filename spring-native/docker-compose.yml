@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   app:
-    image: otel-native-graalvm
+    image: otel-native-graalvm-wzh
     environment:
       OTEL_SERVICE_NAME: "graal-native-example-app"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4318"
