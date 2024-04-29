@@ -25,15 +25,10 @@ public class Controller {
 
   @GetMapping("/ping")
   public String ping() {
-    Span span = this.tracer.spanBuilder("Start my wonderful use case").startSpan();
-    span.addEvent("Event 0");
     
     String url = System.getenv("WZH_URL");
     // Make a request to the URL and get the response
     String response = makeRequest(url);
-
-    span.addEvent("Event 1");
-    span.end();
 
     return response;
   }
@@ -43,15 +38,26 @@ public class Controller {
     // and return the response
     // You can use libraries like HttpClient or OkHttp to make the request
     // Here's an example using HttpClient:
+    Span span = this.tracer.spanBuilder("Start my wonderful use case").startSpan();
+    span.addEvent("Event 0");
+    
     HttpClient client = HttpClient.newHttpClient();
     HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create(url))
         .build();
     try {
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+      span.addEvent("Event 1");
+      span.end();
+  
       return response.body();
     } catch (IOException | InterruptedException e) {
       e.printStackTrace();
+
+      span.addEvent("Event 1");
+      span.end();
+  
       return null;
     }
 
