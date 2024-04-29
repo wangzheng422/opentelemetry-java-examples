@@ -9,6 +9,8 @@ import io.opentelemetry.api.trace.SpanKind;
 import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.context.Scope;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
+import io.opentelemetry.semconv.SemanticAttributes;
+import io.opentelemetry.api.incubator.propagation.ExtendedContextPropagators;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -50,6 +52,10 @@ public class Controller {
           .uri(URI.create(url))
           .build();
       try {
+        span.setAttribute(SemanticAttributes.HTTP_REQUEST_METHOD, "GET");
+        span.setAttribute("component", "http");
+        span.setAttribute(SemanticAttributes.URL_FULL, url.toString());
+
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
       } catch (IOException | InterruptedException e) {
         e.printStackTrace();
