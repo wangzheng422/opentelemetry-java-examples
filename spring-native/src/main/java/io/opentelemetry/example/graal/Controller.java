@@ -1,5 +1,6 @@
 package io.opentelemetry.example.graal;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +13,7 @@ import java.net.URI;
 import java.io.IOException;
 
 @RestController
+@Component
 public class Controller {
 
   @GetMapping("/ping")
