@@ -3,11 +3,7 @@ package io.opentelemetry.example.graal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.Tracer;
-import io.opentelemetry.context.Scope;
-import io.opentelemetry.api.GlobalOpenTelemetry;
-
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -26,6 +22,7 @@ public class Controller {
     return response;
   }
 
+  @WithSpan
   private String makeRequest(String url) {
     // Implement the logic to make a request to the given URL
     // and return the response
